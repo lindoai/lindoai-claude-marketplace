@@ -1,0 +1,30 @@
+{
+  "name": "lindo-ai",
+  "version": "1.1.0",
+  "description": "Create websites, pages, and blog posts with AI. Manage clients, credits, and domains — all through conversation.",
+  "author": {
+    "name": "Lindo AI",
+    "url": "https://lindo.ai"
+  },
+  "homepage": "https://lindo.ai",
+  "repository": "https://github.com/lindoai/claude-plugin",
+  "license": "MIT",
+  "keywords": ["website-builder", "ai", "agency", "whitelabel", "cms", "blog", "saas"],
+  "skills": "./skills",
+  "agents": [
+    "./agents/website-builder.md",
+    "./agents/content-writer.md",
+    "./agents/agency-manager.md"
+  ],
+  "commands": "./commands",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": {
+    "lindo-ai": {
+      "command": "npx",
+      "args": ["-y", "@lindoai/mcp-server"],
+      "env": {
+        "LINDO_API_KEY": ""
+      }
+    }
+  }
+}

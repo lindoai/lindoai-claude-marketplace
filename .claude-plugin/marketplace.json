@@ -1,0 +1,26 @@
+{
+  "name": "lindo-marketplace",
+  "owner": {
+    "name": "Lindo AI",
+    "email": "hello@lindo.ai"
+  },
+  "description": "Official Lindo AI plugin marketplace for Claude Code. Create websites, pages, and blog posts with AI.",
+  "plugins": [
+    {
+      "name": "lindo-ai",
+      "source": "./plugins/lindo-ai",
+      "description": "Create websites, pages, and blog posts with AI. Manage clients, credits, and domains — all through conversation.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Lindo AI",
+        "email": "hello@lindo.ai"
+      },
+      "homepage": "https://lindo.ai",
+      "repository": "https://github.com/lindoai/claude-plugin",
+      "license": "MIT",
+      "keywords": ["website-builder", "ai", "agency", "whitelabel", "cms", "blog"],
+      "category": "productivity",
+      "tags": ["website", "builder", "agency", "ai", "blog", "cms"]
+    }
+  ]
+}

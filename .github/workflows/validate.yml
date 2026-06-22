@@ -1,0 +1,77 @@
+name: Validate marketplace
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate marketplace.json
+        run: |
+          echo "Validating marketplace structure..."
+          
+          # Check marketplace.json exists
+          if [ ! -f ".claude-plugin/marketplace.json" ]; then
+            echo "ERROR: .claude-plugin/marketplace.json not found"
+            exit 1
+          fi
+
+          # Validate JSON syntax
+          if ! python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"; then
+            echo "ERROR: Invalid JSON in marketplace.json"
+            exit 1
+          fi
+
+          # Check required fields
+          python3 -c "
+          import json, sys
+          m = json.load(open('.claude-plugin/marketplace.json'))
+          errors = []
+          if 'name' not in m: errors.append('Missing required field: name')
+          if 'owner' not in m: errors.append('Missing required field: owner')
+          if 'plugins' not in m: errors.append('Missing required field: plugins')
+          if m.get('plugins'):
+            for i, p in enumerate(m['plugins']):
+              if 'name' not in p: errors.append(f'Plugin {i}: missing name')
+              if 'source' not in p: errors.append(f'Plugin {i}: missing source')
+          if errors:
+            print('\n'.join(errors))
+            sys.exit(1)
+          print('✓ marketplace.json is valid')
+          "
+
+      - name: Validate plugin manifests
+        run: |
+          for plugin_dir in plugins/*/; do
+            manifest="$plugin_dir.claude-plugin/plugin.json"
+            if [ ! -f "$manifest" ]; then
+              echo "WARNING: No plugin.json found in $plugin_dir"
+              continue
+            fi
+            if ! python3 -c "import json; json.load(open('$manifest'))"; then
+              echo "ERROR: Invalid JSON in $manifest"
+              exit 1
+            fi
+            echo "✓ $manifest is valid"
+          done
+
+      - name: Validate skills
+        run: |
+          for skill_file in plugins/*/skills/*/SKILL.md; do
+            if [ ! -f "$skill_file" ]; then
+              continue
+            fi
+            # Check frontmatter exists
+            if ! head -1 "$skill_file" | grep -q '^---'; then
+              echo "WARNING: $skill_file missing frontmatter"
+            else
+              echo "✓ $skill_file has frontmatter"
+            fi
+          done
+          echo "All skills validated."
