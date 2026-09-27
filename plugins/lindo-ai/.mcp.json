@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "lindo-ai": {
+      "command": "npx",
+      "args": ["-y", "@lindoai/mcp-server"],
+      "env": {
+        "LINDO_API_KEY": ""
+      }
+    }
+  }
+}
